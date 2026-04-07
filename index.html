@@ -844,7 +844,6 @@
     margin-bottom: 16px;
     transition: border-color 0.25s, box-shadow 0.25s, opacity 0.4s ease;
     opacity: 0.45;
-    cursor: not-allowed;
   }
 
   .attestation-box.checked {
@@ -857,18 +856,23 @@
     display: flex;
     align-items: flex-start;
     gap: 14px;
-    cursor: pointer;
+    cursor: not-allowed;
     font-size: 0.9rem;
     color: var(--text-mid);
     line-height: 1.55;
     user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    padding: 4px 0;
   }
 
   .custom-checkbox {
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
     border: 2px solid var(--border);
-    border-radius: 5px;
+    border-radius: 6px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -876,6 +880,7 @@
     transition: all 0.2s;
     margin-top: 1px;
     background: var(--cream);
+    pointer-events: none;
   }
 
   .custom-checkbox.active {
@@ -886,7 +891,7 @@
   .custom-checkbox.active::after {
     content: '✓';
     color: #fff;
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     font-weight: 700;
   }
 
@@ -1072,11 +1077,10 @@
       </div>
 
       <div class="attestation-box" id="attestBox" style="margin-bottom:6px;">
-        <label class="attestation-label" onclick="toggleAttest()">
+        <div class="attestation-label" id="attestLabel" role="checkbox" aria-checked="false" tabindex="0">
           <div class="custom-checkbox" id="checkboxIcon"></div>
-          <input type="checkbox" class="real-checkbox" id="attestCheck">
           <span>I, the undersigned, hereby confirm that I have <strong>read, understood, and agree to abide</strong> by all the Rules and Regulations of the Majma' Huffāẓ al-Qur'an Programme in their entirety. I understand that non-compliance may result in disciplinary action, suspension, or removal from the programme. I enter this programme with sincerity, seriousness, and full commitment to its objectives.</span>
-        </label>
+        </div>
       </div>
       <p id="attestLockHint" style="font-size:0.73rem;color:var(--text-muted);text-align:center;margin-bottom:22px;font-style:italic;letter-spacing:0.03em;">🔒 Scroll through all the rules above to unlock this attestation</p>
 
@@ -1926,44 +1930,49 @@ const readProgressFill = document.getElementById('readProgressFill');
 const readProgressLabel = document.getElementById('readProgressLabel');
 const btnProceed = document.getElementById('btnProceed');
 const attestBox = document.getElementById('attestBox');
+const attestLabel = document.getElementById('attestLabel');
+const checkboxIcon = document.getElementById('checkboxIcon');
 
+// ---- scroll progress ----
 rulesScrollBody.addEventListener('scroll', function () {
   const scrolled = rulesScrollBody.scrollTop;
   const total = rulesScrollBody.scrollHeight - rulesScrollBody.clientHeight;
   const pct = total > 0 ? Math.min(100, Math.round((scrolled / total) * 100)) : 100;
   readProgressFill.style.width = pct + '%';
   if (pct < 100) {
-    readProgressLabel.textContent = `Reading progress: ${pct}%`;
+    readProgressLabel.textContent = 'Reading progress: ' + pct + '%';
     readProgressLabel.style.color = 'var(--text-muted)';
-    attestBox.style.opacity = '0.5';
-    attestBox.style.cursor = 'not-allowed';
   } else {
     hasReadAll = true;
     readProgressLabel.textContent = '✓ You have read all the rules — please confirm below';
     readProgressLabel.style.color = 'var(--green-mid)';
     attestBox.style.opacity = '1';
     attestBox.style.cursor = 'pointer';
-    attestBox.style.transition = 'opacity 0.4s ease, box-shadow 0.3s';
-    attestBox.style.boxShadow = '0 0 0 3px rgba(45,106,79,0.15)';
     attestBox.style.borderColor = 'var(--green-light)';
+    attestBox.style.boxShadow = '0 0 0 3px rgba(45,106,79,0.15)';
+    attestLabel.style.cursor = 'pointer';
     const hint = document.getElementById('attestLockHint');
     if (hint) hint.style.display = 'none';
   }
 });
 
-function toggleAttest() {
+// ---- toggle attestation (click + touch, no double-fire) ----
+function toggleAttest(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+
   if (!hasReadAll) {
-    // Prompt user to scroll to the bottom
     rulesScrollBody.scrollTo({ top: rulesScrollBody.scrollHeight, behavior: 'smooth' });
     readProgressLabel.textContent = '⚠ Please scroll through all the rules first';
     readProgressLabel.style.color = '#c0392b';
     return;
   }
+
   attestChecked = !attestChecked;
-  document.getElementById('attestCheck').checked = attestChecked;
-  document.getElementById('checkboxIcon').classList.toggle('active', attestChecked);
+  checkboxIcon.classList.toggle('active', attestChecked);
+  attestLabel.setAttribute('aria-checked', attestChecked ? 'true' : 'false');
   attestBox.classList.toggle('checked', attestChecked);
   document.getElementById('attestWarning').classList.remove('show');
+
   if (attestChecked) {
     btnProceed.classList.add('ready');
   } else {
@@ -1971,15 +1980,37 @@ function toggleAttest() {
   }
 }
 
+// Use touchend for mobile, click for desktop — prevent both from double-firing
+let _touchFired = false;
+attestLabel.addEventListener('touchend', function(e) {
+  _touchFired = true;
+  toggleAttest(e);
+  setTimeout(function(){ _touchFired = false; }, 400);
+}, { passive: false });
+
+attestLabel.addEventListener('click', function(e) {
+  if (_touchFired) return;
+  toggleAttest(e);
+});
+
+// Keyboard accessibility (Space/Enter)
+attestLabel.addEventListener('keydown', function(e) {
+  if (e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault();
+    toggleAttest(e);
+  }
+});
+
 function proceedToForm() {
   if (!attestChecked) {
     document.getElementById('attestWarning').classList.add('show');
+    attestBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
   const gate = document.getElementById('rulesGate');
   gate.style.transition = 'opacity 0.4s ease';
   gate.style.opacity = '0';
-  setTimeout(() => { gate.classList.add('hidden'); }, 400);
+  setTimeout(function() { gate.classList.add('hidden'); }, 400);
 }
 
 function updateProceedBtn() {}
