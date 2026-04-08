@@ -1211,7 +1211,7 @@
           <div class="field-grid">
             <div class="field-group">
               <label class="field-label">Faculty</label>
-              <input type="text" class="field-input" id="faculty" placeholder="e.g. Faculty of Science">
+              <input type="text" class="field-input" id="faculty" placeholder="e.g. Faculty of Natural and Applied Sciences">
             </div>
             <div class="field-group">
               <label class="field-label">Department</label>
@@ -1221,15 +1221,22 @@
         </div>
 
         <div class="field-group full-width">
-          <label class="field-label">Academic Level / Grade</label>
+          <label class="field-label">Academic Level</label>
           <div class="options-row" id="gradeOptions">
-            <label class="option-pill" onclick="selectRadio(this,'grade','100l')"><span class="pill-dot"></span> 100l</label>
-            <label class="option-pill" onclick="selectRadio(this,'grade','200l')"><span class="pill-dot"></span> 200l</label>
-            <label class="option-pill" onclick="selectRadio(this,'grade','300l')"><span class="pill-dot"></span> 300l</label>
-            <label class="option-pill" onclick="selectRadio(this,'grade','400l/ Final Year')"><span class="pill-dot"></span> 400l / Final Year</label>
-            <label class="option-pill" onclick="selectRadio(this,'grade','Other')"><span class="pill-dot"></span> Other</label>
+            <label class="option-pill" onclick="selectRadio(this,'grade','100L'); toggleConditional('grade','Others','grade-other-block')"><span class="pill-dot"></span> 100L</label>
+            <label class="option-pill" onclick="selectRadio(this,'grade','200L'); toggleConditional('grade','Others','grade-other-block')"><span class="pill-dot"></span> 200L</label>
+            <label class="option-pill" onclick="selectRadio(this,'grade','300L'); toggleConditional('grade','Others','grade-other-block')"><span class="pill-dot"></span> 300L</label>
+            <label class="option-pill" onclick="selectRadio(this,'grade','400L'); toggleConditional('grade','Others','grade-other-block')"><span class="pill-dot"></span> 400L</label>
+            <label class="option-pill" onclick="selectRadio(this,'grade','500L'); toggleConditional('grade','Others','grade-other-block')"><span class="pill-dot"></span> 500L</label>
+            <label class="option-pill" onclick="selectRadio(this,'grade','Others'); toggleConditional('grade','Others','grade-other-block')"><span class="pill-dot"></span> Others</label>
           </div>
           <input type="hidden" id="grade">
+          <div class="conditional-block" id="grade-other-block" style="margin-top:10px;">
+            <div class="field-group">
+              <label class="field-label">Please specify your level</label>
+              <input type="text" class="field-input" id="gradeOther" placeholder="e.g. Postgraduate, Part-time, etc.">
+            </div>
+          </div>
         </div>
 
         <div class="field-group full-width">
@@ -1397,17 +1404,16 @@
         </div>
 
         <div class="field-group full-width">
-          <label class="field-label">How much of the Qur'an have you memorized? <span class="required-star">★</span></label>
+          <label class="field-label">Level of Qur'an Hifdh — Portion Memorized <span class="required-star">★</span></label>
           <div class="options-row">
-            <label class="option-pill" onclick="selectRadio(this,'memorized','None')"><span class="pill-dot"></span> None</label>
-            <label class="option-pill" onclick="selectRadio(this,'memorized','Juz 'Amma')"><span class="pill-dot"></span> Juz 'Amma</label>
-            <label class="option-pill" onclick="selectRadio(this,'memorized','1–5 Juz')"><span class="pill-dot"></span> 1–5 Juz</label>
-            <label class="option-pill" onclick="selectRadio(this,'memorized','5–10 Juz')"><span class="pill-dot"></span> 5–10 Juz</label>
-            <label class="option-pill" onclick="selectRadio(this,'memorized','10+ Juz')"><span class="pill-dot"></span> 10+ Juz</label>
-            <label class="option-pill" onclick="selectRadio(this,'memorized','Complete Hafiz')"><span class="pill-dot"></span> Complete Hafiz</label>
+            <label class="option-pill" onclick="selectRadio(this,'memorized','Beginners')"><span class="pill-dot"></span> Beginners</label>
+            <label class="option-pill" onclick="selectRadio(this,'memorized','1–5 Juzz')"><span class="pill-dot"></span> 1–5 Juzz</label>
+            <label class="option-pill" onclick="selectRadio(this,'memorized','6–10 Juzz')"><span class="pill-dot"></span> 6–10 Juzz</label>
+            <label class="option-pill" onclick="selectRadio(this,'memorized','11–20 Juzz')"><span class="pill-dot"></span> 11–20 Juzz</label>
+            <label class="option-pill" onclick="selectRadio(this,'memorized','21–30 Juzz')"><span class="pill-dot"></span> 21–30 Juzz</label>
           </div>
           <input type="hidden" id="memorized">
-          <span class="error-msg" id="err-memorized">Please select your memorization level.</span>
+          <span class="error-msg" id="err-memorized">Please select your Hifdh level.</span>
         </div>
 
         <div class="field-group full-width">
@@ -1416,21 +1422,22 @@
         </div>
 
         <div class="field-group full-width">
-          <label class="field-label">Strength of Murāja'ah (Revision)</label>
+          <label class="field-label">Level of Murāja'ah on Completed Hifdh Portion</label>
           <div class="options-row">
-            <label class="option-pill" onclick="selectRadio(this,'muraja','Strong')"><span class="pill-dot"></span> Strong</label>
-            <label class="option-pill" onclick="selectRadio(this,'muraja','Moderate')"><span class="pill-dot"></span> Moderate</label>
-            <label class="option-pill" onclick="selectRadio(this,'muraja','Weak')"><span class="pill-dot"></span> Weak</label>
+            <label class="option-pill" onclick="selectRadio(this,'muraja','70–100%')"><span class="pill-dot"></span> 70–100%</label>
+            <label class="option-pill" onclick="selectRadio(this,'muraja','50–70%')"><span class="pill-dot"></span> 50–70%</label>
+            <label class="option-pill" onclick="selectRadio(this,'muraja','30–50%')"><span class="pill-dot"></span> 30–50%</label>
+            <label class="option-pill" onclick="selectRadio(this,'muraja','Below 30%')"><span class="pill-dot"></span> Below 30%</label>
           </div>
           <input type="hidden" id="muraja">
         </div>
 
         <div class="field-group full-width">
-          <label class="field-label">Tajweed Knowledge Level</label>
+          <label class="field-label">Level of Tajweed Mastering</label>
           <div class="options-row">
-            <label class="option-pill" onclick="selectRadio(this,'tajweed','Beginner')"><span class="pill-dot"></span> Beginner</label>
-            <label class="option-pill" onclick="selectRadio(this,'tajweed','Intermediate')"><span class="pill-dot"></span> Intermediate</label>
             <label class="option-pill" onclick="selectRadio(this,'tajweed','Advanced')"><span class="pill-dot"></span> Advanced</label>
+            <label class="option-pill" onclick="selectRadio(this,'tajweed','Intermediate')"><span class="pill-dot"></span> Intermediate</label>
+            <label class="option-pill" onclick="selectRadio(this,'tajweed','Beginners')"><span class="pill-dot"></span> Beginners</label>
           </div>
           <input type="hidden" id="tajweed">
         </div>
@@ -1464,34 +1471,27 @@
         </div>
 
         <div class="field-group full-width">
-          <label class="field-label">Preferred Time Slots</label>
+          <label class="field-label">Preferred Session Time <span class="field-hint">(Select all that apply)</span></label>
           <div class="time-grid" id="timeGrid">
-            <label class="time-card" onclick="toggleCheckbox(this,'times','Morning (8am–10am)')">
+            <label class="time-card" onclick="toggleCheckbox(this,'times','Asr – Maghrib (Main Session)')">
               <input type="checkbox">
-              <div class="time-day">Morning</div>
-              <div class="time-slot">8:00 – 10:00 AM</div>
+              <div class="time-day">Main Session</div>
+              <div class="time-slot">Asr → Maghrib</div>
             </label>
-            <label class="time-card" onclick="toggleCheckbox(this,'times','Late Morning (10am–12pm)')">
+            <label class="time-card" onclick="toggleCheckbox(this,'times','Maghrib – Isha (By Appointment)')">
               <input type="checkbox">
-              <div class="time-day">Late Morning</div>
-              <div class="time-slot">10:00 AM – 12:00 PM</div>
+              <div class="time-day">By Appointment</div>
+              <div class="time-slot">Maghrib → Isha</div>
             </label>
-            <label class="time-card" onclick="toggleCheckbox(this,'times','Afternoon (2pm–4pm)')">
+            <label class="time-card" onclick="toggleCheckbox(this,'times','After Isha (By Appointment)')">
               <input type="checkbox">
-              <div class="time-day">Afternoon</div>
-              <div class="time-slot">2:00 – 4:00 PM</div>
-            </label>
-            <label class="time-card" onclick="toggleCheckbox(this,'times','Evening (4pm–6pm)')">
-              <input type="checkbox">
-              <div class="time-day">Evening</div>
-              <div class="time-slot">4:00 – 6:00 PM</div>
-            </label>
-            <label class="time-card" onclick="toggleCheckbox(this,'times','After Isha')">
-              <input type="checkbox">
-              <div class="time-day">Night</div>
-              <div class="time-slot">After 'Ishā'</div>
+              <div class="time-day">By Appointment</div>
+              <div class="time-slot">After Isha</div>
             </label>
           </div>
+          <p style="font-size:0.75rem;color:var(--text-muted);margin-top:8px;font-style:italic;">
+            📌 The main programme runs from <strong>Asr to Maghrib</strong>. Sessions after Maghrib and after Isha are available <strong>by appointment only</strong>.
+          </p>
         </div>
 
         <div class="field-group full-width">
@@ -1533,7 +1533,7 @@
   <div class="success-card">
     <div class="success-icon">🌙</div>
     <div class="success-title">الحمد لله</div>
-    <div class="success-sub">Al-hamdulillāh — Registration Submitted!</div>
+    <div class="success-sub">Alhamdulillāh — Registration Submitted!</div>
     <div class="success-msg">
       Your registration for the <strong>Majma' Huffāẓ al-Qur'an Programme</strong> has been recorded. May Allah bless your journey with the Qur'an.<br><br>
       📌 <strong>Next Steps:</strong> Please send your registration via WhatsApp, then join our official WhatsApp group using the button below.
@@ -1585,7 +1585,38 @@ function toggleCheckbox(el, key, value) {
 // ===== CONDITIONAL =====
 function toggleConditional(key, value, blockId) {
   const block = document.getElementById(blockId);
-  if (block) block.classList.toggle('show', value === 'Yes');
+  if (!block) return;
+  block.style.display = (value === 'Yes') ? 'block' : 'none';
+}
+
+// ===== FACULTY → DEPARTMENT MAP =====
+const deptMap = {
+  'Faculty of Agriculture': ['Agricultural Economics','Animal Science','Crop Production','Fisheries & Aquaculture','Forestry & Wildlife','Soil Science'],
+  'Faculty of Arts and Humanities': ['Arabic','Christian Religious Studies','English & Literary Studies','French','History & International Studies','Islamic Studies','Linguistics','Philosophy'],
+  'Faculty of Basic Medical Sciences': ['Anatomy','Biochemistry','Medical Laboratory Science','Nursing Science','Physiology'],
+  'Faculty of Education': ['Adult Education','Curriculum Studies','Early Childhood Education','Educational Management','Guidance & Counselling','Science Education','Social Studies Education'],
+  'Faculty of Engineering and Technology': ['Chemical Engineering','Civil Engineering','Computer Engineering','Electrical/Electronics Engineering','Mechanical Engineering','Mechatronics Engineering'],
+  'Faculty of Environmental Sciences': ['Architecture','Building Technology','Estate Management','Quantity Surveying','Urban & Regional Planning'],
+  'Faculty of Law': ['Business Law','International Law','Private Law','Public Law'],
+  'Faculty of Management Sciences': ['Accounting','Banking & Finance','Business Administration','Entrepreneurship','Insurance','Marketing','Public Administration'],
+  'Faculty of Natural and Applied Sciences': ['Biochemistry','Biology','Chemistry','Computer Science','Information Technology','Mathematics','Microbiology','Physics','Statistics'],
+  'Faculty of Social Sciences': ['Economics','Geography','Mass Communication','Political Science','Psychology','Sociology'],
+  'Postgraduate School': ['Masters Programme','PhD Programme'],
+  'Other': ['Other / Not Listed'],
+};
+
+function handleFacultyChange(faculty) {
+  const deptSel = document.getElementById('department');
+  deptSel.innerHTML = '<option value="">— Select Department —</option>';
+  const depts = deptMap[faculty] || [];
+  depts.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d; opt.textContent = d;
+    deptSel.appendChild(opt);
+  });
+  if (!depts.length) {
+    deptSel.innerHTML = '<option value="">— Select Faculty first —</option>';
+  }
 }
 
 // ===== VALIDATION =====
@@ -1762,7 +1793,7 @@ function submitForm() {
     name: val('fullName'), gender: val('gender'), dob: val('dob'),
     phone: val('phone'), email: val('email'), state: val('stateOrigin'),
     homeAddr: val('homeAddress'), kwasu: val('kwasu'), faculty: val('faculty'),
-    dept: val('department'), grade: val('grade'), hostel: val('hostel'),
+    dept: val('department'), grade: val('grade') === 'Others' ? ('Others — ' + (val('gradeOther') || 'not specified')) : val('grade'), hostel: val('hostel'),
     kinName: val('kinName'), kinRel: val('kinRelation'), kinAddr: val('kinAddress'),
     kinPhone: val('kinPhone'), blood: val('bloodGroup'), geno: val('genotype'),
     disability: val('disability'), disabilityDetail: val('disabilityDetail'),
@@ -1773,56 +1804,80 @@ function submitForm() {
     times: formData['times'] || '—', motivation: val('motivation'),
   };
 
-  const msg = `
-*بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ*
-*Majma' Huffāẓ al-Qur'an — Registration*
+  const msg = [
+'╔══════════════════════════════════╗',
+'       بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ       ',
+'╠══════════════════════════════════╣',
+"   *MAJMA' HUFFĀẒ AL-QUR'AN*   ",
+'   *Programme Registration Form*   ',
+'   KWASU Campus                    ',
+'╚══════════════════════════════════╝',
+'',
+'┌─────────────────────────────────┐',
+'│  👤  PERSONAL INFORMATION       │',
+'└─────────────────────────────────┘',
+`  Full Name    : *${d.name}*`,
+`  Gender       : ${d.gender}`,
+`  Date of Birth: ${d.dob}`,
+`  Phone (WA)   : ${d.phone}`,
+`  Email        : ${d.email || '—'}`,
+`  State        : ${d.state}`,
+`  Home Address : ${d.homeAddr}`,
+'',
+'┌─────────────────────────────────┐',
+'│  🎓  ACADEMIC INFORMATION       │',
+'└─────────────────────────────────┘',
+`  KWASU Student: ${d.kwasu}`,
+`  Faculty      : ${d.faculty || '—'}`,
+`  Department   : ${d.dept || '—'}`,
+`  Level        : ${d.grade || '—'}`,
+`  Hostel/Addr  : ${d.hostel || '—'}`,
+'',
+'┌─────────────────────────────────┐',
+'│  👨‍👩‍👧  NEXT OF KIN / GUARDIAN     │',
+'└─────────────────────────────────┘',
+`  Name         : *${d.kinName}*`,
+`  Relationship : ${d.kinRel}`,
+`  Address      : ${d.kinAddr || '—'}`,
+`  Phone        : ${d.kinPhone}`,
+'',
+'┌─────────────────────────────────┐',
+'│  🩺  HEALTH INFORMATION         │',
+'└─────────────────────────────────┘',
+`  Blood Group  : ${d.blood || '—'}`,
+`  Genotype     : ${d.geno || '—'}`,
+`  Disability   : ${d.disability}${d.disabilityDetail && d.disabilityDetail !== '—' ? ' (' + d.disabilityDetail + ')' : ''}`,
+`  Health Comp. : ${d.healthComp}${d.healthDetail && d.healthDetail !== '—' ? ' (' + d.healthDetail + ')' : ''}`,
+'',
+'┌─────────────────────────────────┐',
+"│  📖  QUR'ANIC BACKGROUND        │",
+'└─────────────────────────────────┘',
+`  Reads Qur\'an : ${d.canRead}`,
+`  Fluency      : ${d.fluency || '—'}`,
+`  Hifdh Level  : *${d.memorized}*`,
+`  Stopped At   : ${d.stopPoint || '—'}`,
+`  Murāja\'ah    : ${d.muraja || '—'}`,
+`  Tajweed      : ${d.tajweed || '—'}`,
+'',
+'┌─────────────────────────────────┐',
+'│  📋  PROGRAMME PREFERENCE       │',
+'└─────────────────────────────────┘',
+`  Track(s)     : ${d.track}`,
+`  Days         : ${d.days}`,
+`  Time Slot(s) : ${d.times}`,
+'',
+'┌─────────────────────────────────┐',
+'│  💬  MOTIVATION                 │',
+'└─────────────────────────────────┘',
+`  ${d.motivation}`,
+'',
+'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+"_Submitted via Majma' Huffāẓ al-Qur'an_",
+'_Online Registration Form — KWASU_',
+'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+  ].join('\n');
 
-*👤 PERSONAL INFORMATION*
-• Full Name: ${d.name}
-• Gender: ${d.gender}
-• DOB: ${d.dob}
-• Phone (WA): ${d.phone}
-• Email: ${d.email}
-• State: ${d.state}
-• Home Address: ${d.homeAddr}
-
-*🎓 ACADEMIC INFORMATION*
-• KWASU Student: ${d.kwasu}
-• Faculty: ${d.faculty}
-• Department: ${d.dept}
-• Level: ${d.grade}
-• Hostel: ${d.hostel}
-
-*👨‍👩‍👧 NEXT OF KIN*
-• Name: ${d.kinName}
-• Relationship: ${d.kinRel}
-• Address: ${d.kinAddr}
-• Phone: ${d.kinPhone}
-
-*🩺 HEALTH INFORMATION*
-• Blood Group: ${d.blood}
-• Genotype: ${d.geno}
-• Disability: ${d.disability} ${d.disabilityDetail !== '—' ? '('+d.disabilityDetail+')' : ''}
-• Health Complication: ${d.healthComp} ${d.healthDetail !== '—' ? '('+d.healthDetail+')' : ''}
-
-*📖 QUR'ANIC BACKGROUND*
-• Reads Qur'an: ${d.canRead}
-• Fluency: ${d.fluency}
-• Memorized: ${d.memorized}
-• Stopped At: ${d.stopPoint}
-• Murāja'ah: ${d.muraja}
-• Tajweed: ${d.tajweed}
-• Track: ${d.track}
-• Available Days: ${d.days}
-• Preferred Times: ${d.times}
-
-*💬 MOTIVATION*
-${d.motivation}
-
-_Submitted via Majma' Huffāẓ al-Qur'an Registration Form_
-  `.trim();
-
-  // WhatsApp number — replace with actual admin number
+  // WhatsApp number
   const waNumber = '2349095707751';
   document.getElementById('whatsappBtn').onclick = () => {
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -2019,4 +2074,4 @@ function updateProceedBtn() {}
 updateUI();
 </script>
 </body>
-</html>
+  </html>
