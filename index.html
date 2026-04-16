@@ -354,36 +354,61 @@
   }
 
   .time-card {
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 10px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.22s ease;
     text-align: center;
+    background: var(--cream);
+    user-select: none;
+    position: relative;
   }
 
   .time-card:hover {
     border-color: var(--green-light);
-    background: rgba(82,183,136,0.05);
+    background: rgba(82,183,136,0.07);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(45,106,79,0.12);
   }
 
   .time-card.selected {
     border-color: var(--green-mid);
-    background: rgba(45,106,79,0.08);
+    background: rgba(45,106,79,0.10);
+    box-shadow: 0 4px 14px rgba(45,106,79,0.18);
+    transform: translateY(-2px);
+  }
+
+  .time-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--green-mid);
   }
 
   .time-card input { display: none; }
 
+  .time-card-icon {
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+    display: block;
+  }
+
   .time-day {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--green-mid);
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--green-deep);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     margin-bottom: 4px;
   }
 
-  .time-slot { font-size: 0.83rem; color: var(--text-mid); }
+  .time-card.selected .time-day { color: var(--green-mid); }
+
+  .time-slot { font-size: 0.8rem; color: var(--text-muted); }
 
   /* ===== CONDITIONAL FIELD ===== */
   .conditional-block {
@@ -1549,26 +1574,41 @@
         </div>
 
         <div class="field-group full-width">
-          <label class="field-label">Preferred Session Time <span class="field-hint">(Select all that apply)</span></label>
+          <label class="field-label">Preferred Class Period <span class="field-hint">(Select all that apply)</span></label>
           <div class="time-grid" id="timeGrid">
-            <label class="time-card" onclick="toggleCheckbox(this,'times','Asr – Maghrib (Main Session)')">
-              <input type="checkbox">
+            <div class="time-card" onclick="toggleTimeCard(this,'Morning (8am – 10am)')">
+              <div class="time-card-icon">🌅</div>
+              <div class="time-day">Morning</div>
+              <div class="time-slot">8:00 – 10:00 AM</div>
+            </div>
+            <div class="time-card" onclick="toggleTimeCard(this,'Late Morning (10am – 12pm)')">
+              <div class="time-card-icon">☀️</div>
+              <div class="time-day">Late Morning</div>
+              <div class="time-slot">10:00 AM – 12:00 PM</div>
+            </div>
+            <div class="time-card" onclick="toggleTimeCard(this,'Afternoon (2pm – 4pm)')">
+              <div class="time-card-icon">🌤️</div>
+              <div class="time-day">Afternoon</div>
+              <div class="time-slot">2:00 – 4:00 PM</div>
+            </div>
+            <div class="time-card" onclick="toggleTimeCard(this,'Asr – Maghrib (Main Session)')">
+              <div class="time-card-icon">🕌</div>
               <div class="time-day">Main Session</div>
               <div class="time-slot">Asr → Maghrib</div>
-            </label>
-            <label class="time-card" onclick="toggleCheckbox(this,'times','Maghrib – Isha (By Appointment)')">
-              <input type="checkbox">
-              <div class="time-day">By Appointment</div>
+            </div>
+            <div class="time-card" onclick="toggleTimeCard(this,'Evening (Maghrib – Isha)')">
+              <div class="time-card-icon">🌆</div>
+              <div class="time-day">Evening</div>
               <div class="time-slot">Maghrib → Isha</div>
-            </label>
-            <label class="time-card" onclick="toggleCheckbox(this,'times','After Isha (By Appointment)')">
-              <input type="checkbox">
-              <div class="time-day">By Appointment</div>
+            </div>
+            <div class="time-card" onclick="toggleTimeCard(this,'Night (After Isha)')">
+              <div class="time-card-icon">🌙</div>
+              <div class="time-day">Night</div>
               <div class="time-slot">After Isha</div>
-            </label>
+            </div>
           </div>
-          <p style="font-size:0.75rem;color:var(--text-muted);margin-top:8px;font-style:italic;">
-            📌 The main programme runs from <strong>Asr to Maghrib</strong>. Sessions after Maghrib and after Isha are available <strong>by appointment only</strong>.
+          <p style="font-size:0.75rem;color:var(--text-muted);margin-top:10px;font-style:italic;">
+            📌 The main programme runs <strong>Asr to Maghrib</strong>. Other periods subject to availability and approval.
           </p>
         </div>
 
@@ -1596,8 +1636,8 @@
       <!-- PAYMENT BOX -->
       <div class="payment-box">
         <div class="payment-label">Registration Fee</div>
-        <div class="payment-amount">₦2,000</div>
-        <div class="payment-label" style="margin-top:6px; margin-bottom:16px;">Two Thousand Naira Only</div>
+        <div class="payment-amount">₦1,000</div>
+        <div class="payment-label" style="margin-top:6px; margin-bottom:16px;">One Thousand Naira Only</div>
         <div class="payment-details">
           <div class="payment-detail-row">
             <span class="payment-detail-key">Account Name</span>
@@ -1647,7 +1687,7 @@
     <div class="success-sub">Alhamdulillāh — Registration Submitted!</div>
     <div class="success-msg">
       Your registration for the <strong>Majma' Huffāẓ al-Qur'an Programme</strong> has been recorded. May Allah bless your journey with the Qur'an.<br><br>
-      💳 <strong>Payment:</strong> Make sure your <strong>₦2,000</strong> registration fee has been paid and your receipt reference is included in your WhatsApp message.<br><br>
+      💳 <strong>Payment:</strong> Make sure your <strong>₦1,000</strong> registration fee has been paid and your receipt reference is included in your WhatsApp message.<br><br>
       📌 <strong>Next Steps:</strong> Send your registration via WhatsApp, then join our official group below.
     </div>
     <button class="whatsapp-btn" id="whatsappBtn">
@@ -1692,6 +1732,18 @@ function toggleCheckbox(el, key, value) {
     checkboxData[key] = checkboxData[key].filter(v => v !== value);
   }
   formData[key] = checkboxData[key].join(', ');
+}
+
+// Dedicated handler for time cards (div-based, not label)
+function toggleTimeCard(el, value) {
+  el.classList.toggle('selected');
+  if (!checkboxData['times']) checkboxData['times'] = [];
+  if (el.classList.contains('selected')) {
+    if (!checkboxData['times'].includes(value)) checkboxData['times'].push(value);
+  } else {
+    checkboxData['times'] = checkboxData['times'].filter(v => v !== value);
+  }
+  formData['times'] = checkboxData['times'].join(', ');
 }
 
 // ===== CONDITIONAL =====
@@ -1989,7 +2041,7 @@ function submitForm() {
 '┌─────────────────────────────────┐',
 '│  💳  PAYMENT INFORMATION        │',
 '└─────────────────────────────────┘',
-`  Fee Paid     : ₦2,000`,
+`  Fee Paid     : ₦1,000`,
 `  Reference    : *${d.paymentRef}*`,
 '',
 '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
@@ -2062,7 +2114,7 @@ function downloadSummary(d) {
       ['Tajweed', d.tajweed], ['Track', d.track], ['Days', d.days]
     ]},
     { label: '● MOTIVATION', items: [['', d.motivation.substring(0,120) + (d.motivation.length > 120 ? '...' : '')]] },
-    { label: '● PAYMENT', items: [['Fee', '₦2,000'], ['Reference', d.paymentRef || '—']] }
+    { label: '● PAYMENT', items: [['Fee', '₦1,000'], ['Reference', d.paymentRef || '—']] }
   ];
 
   let y = 138;
@@ -2196,4 +2248,4 @@ function updateProceedBtn() {}
 updateUI();
 </script>
 </body>
-</html>
+  </html>
