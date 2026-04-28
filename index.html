@@ -164,7 +164,6 @@
     border: 1px solid var(--border);
     border-top: none;
     border-radius: 0 0 16px 16px;
-    overflow: hidden;
   }
 
   .form-section {
@@ -430,6 +429,8 @@
     padding: 22px 40px;
     background: var(--cream-dark);
     border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 10;
   }
 
   .btn {
@@ -561,10 +562,12 @@
     border-radius: 20px;
     padding: 52px 48px;
     text-align: center;
-    max-width: 440px;
+    max-width: 480px;
     width: 90%;
     box-shadow: 0 24px 64px rgba(0,0,0,0.3);
     animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow-y: auto;
+    max-height: 92vh;
   }
 
   @keyframes popIn {
@@ -700,15 +703,34 @@
     justify-content: space-between;
     align-items: center;
     font-size: 0.84rem;
+    gap: 10px;
   }
-  .payment-detail-key { color: rgba(255,255,255,0.6); }
-  .payment-detail-val { color: #fff; font-weight: 600; }
+  .payment-detail-key { color: rgba(255,255,255,0.6); white-space: nowrap; }
+  .payment-detail-val { color: #fff; font-weight: 600; text-align: right; }
   .payment-note {
     font-size: 0.76rem;
     color: rgba(255,255,255,0.55);
     font-style: italic;
     line-height: 1.5;
   }
+  .copy-acc-btn {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #fff;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 3px 9px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .copy-acc-btn:hover { background: rgba(255,255,255,0.3); }
+  .copy-acc-btn.copied { background: var(--green-light); border-color: var(--green-light); }
+
   .payment-confirm-wrap {
     background: rgba(201,168,76,0.08);
     border: 1.5px solid rgba(201,168,76,0.35);
@@ -727,7 +749,6 @@
     border-radius: 50px;
     letter-spacing: 0.04em;
   }
-  .success-card { overflow-y: auto; max-height: 92vh; }
 
   /* Notice box */
   .notice-box {
@@ -743,6 +764,32 @@
 
   .notice-box strong { color: var(--green-deep); }
 
+  /* Success payment reminder box */
+  .success-payment-box {
+    background: rgba(201,168,76,0.08);
+    border: 1.5px solid rgba(201,168,76,0.35);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  .success-payment-box h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--green-deep);
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .success-payment-box p {
+    font-size: 0.83rem;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+  .success-payment-box strong { color: var(--green-deep); }
+
   @media (max-width: 600px) {
     .form-section { padding: 24px 20px; }
     .section-nav { padding: 18px 20px; }
@@ -750,6 +797,7 @@
     .review-grid { grid-template-columns: 1fr; }
     .bismillah { font-size: 1.8rem; }
     .org-name { font-size: 1.4rem; }
+    .success-card { padding: 36px 24px; }
   }
 
   /* ===== RULES GATE ===== */
@@ -1630,10 +1678,10 @@
         </div>
       </div>
       <div class="notice-box">
-        Please review your information carefully before submitting. After submission, your details will be sent via WhatsApp.
+        Please review your information carefully before submitting. After submission, send your payment receipt via WhatsApp to confirm your enrolment.
       </div>
 
-      <!-- PAYMENT BOX -->
+      <!-- PAYMENT BOX — UPDATED WITH REAL ACCOUNT DETAILS -->
       <div class="payment-box">
         <div class="payment-label">Registration Fee</div>
         <div class="payment-amount">₦1,000</div>
@@ -1641,15 +1689,18 @@
         <div class="payment-details">
           <div class="payment-detail-row">
             <span class="payment-detail-key">Account Name</span>
-            <span class="payment-detail-val">Majma' Huffāẓ al-Qur'an</span>
-          </div>
-          <div class="payment-detail-row">
-            <span class="payment-detail-key">Bank</span>
-            <span class="payment-detail-val">— Enter Bank Name —</span>
+            <span class="payment-detail-val">ABDULBASIT BOLAKALE IBRAHIM</span>
           </div>
           <div class="payment-detail-row">
             <span class="payment-detail-key">Account Number</span>
-            <span class="payment-detail-val">— Enter Account No. —</span>
+            <span class="payment-detail-val">
+              9155985350
+              <button class="copy-acc-btn" id="copyAccBtn" onclick="copyAccNum(event)">Copy</button>
+            </span>
+          </div>
+          <div class="payment-detail-row">
+            <span class="payment-detail-key">Bank</span>
+            <span class="payment-detail-val">Opay</span>
           </div>
         </div>
         <div class="payment-note">💡 Please use your full name as the payment narration/description so your payment can be identified easily.</div>
@@ -1662,20 +1713,19 @@
         </label>
         <input type="text" class="field-input" id="paymentRef" placeholder="e.g. TRF2024XXXXXXXX or transaction ID" style="margin-bottom:8px;">
         <span class="error-msg" id="err-paymentRef">Please enter your payment reference number.</span>
-        <div style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;">Enter the transaction reference/ID from your bank transfer receipt. Your registration will not be confirmed without payment.</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;">Enter the transaction reference/ID from your Opay transfer receipt. Your registration will not be confirmed without payment.</div>
       </div>
 
       <div id="reviewContent"></div>
     </div>
 
+    <!-- NAV -->
+    <div class="section-nav">
+      <button class="btn btn-prev" id="btnPrev" onclick="changeSection(-1)" disabled>← Previous</button>
+      <div class="step-dots" id="stepDots"></div>
+      <button class="btn btn-next" id="btnNext">Next →</button>
+    </div>
   </div><!-- /form-body -->
-
-  <!-- NAV -->
-  <div class="section-nav">
-    <button class="btn btn-prev" id="btnPrev" onclick="changeSection(-1)" disabled>← Previous</button>
-    <div class="step-dots" id="stepDots"></div>
-    <button class="btn btn-next" id="btnNext" onclick="changeSection(1)">Next →</button>
-  </div>
 
 </div>
 
@@ -1686,13 +1736,24 @@
     <div class="success-title">الحمد لله</div>
     <div class="success-sub">Alhamdulillāh — Registration Submitted!</div>
     <div class="success-msg">
-      Your registration for the <strong>Majma' Huffāẓ al-Qur'an Programme</strong> has been recorded. May Allah bless your journey with the Qur'an.<br><br>
-      💳 <strong>Payment:</strong> Make sure your <strong>₦1,000</strong> registration fee has been paid and your receipt reference is included in your WhatsApp message.<br><br>
-      📌 <strong>Next Steps:</strong> Send your registration via WhatsApp, then join our official group below.
+      Your registration for the <strong>Majma' Huffāẓ al-Qur'an Programme</strong> has been recorded. May Allah bless your journey with the Qur'an.
     </div>
+
+    <!-- Payment reminder in success card -->
+    <div class="success-payment-box">
+      <h4>💳 Complete Your Payment</h4>
+      <p>
+        If you haven't paid yet, transfer <strong>₦1,000</strong> to:<br>
+        <strong>Account Name:</strong> ABDULBASIT BOLAKALE IBRAHIM<br>
+        <strong>Account Number:</strong> 9155985350<br>
+        <strong>Bank:</strong> Opay<br><br>
+        Then send your <strong>receipt + a copy of the form</strong> to the WhatsApp number below. Once verified, you'll be added to the group.
+      </p>
+    </div>
+
     <button class="whatsapp-btn" id="whatsappBtn">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Send Registration via WhatsApp
+      Send Receipt &amp; Form Copy via WhatsApp
     </button>
     <a class="whatsapp-btn" href="https://chat.whatsapp.com/GLNMWUZxOESJOVgufpTfJ1?mode=gi_t" target="_blank" style="background:#128C7E; margin-top:0;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -1710,6 +1771,36 @@ let currentSection = 1;
 const totalSections = 6;
 const formData = {};
 const checkboxData = { track: [], days: [], times: [] };
+
+// ===== COPY ACCOUNT NUMBER =====
+function copyAccNum(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  navigator.clipboard.writeText('9155985350').then(function() {
+    var btn = document.getElementById('copyAccBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(function() {
+    // Fallback for older browsers
+    var el = document.createElement('textarea');
+    el.value = '9155985350';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    var btn = document.getElementById('copyAccBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
 
 // ===== RADIO SELECT =====
 function selectRadio(el, key, value) {
@@ -1751,36 +1842,6 @@ function toggleConditional(key, value, blockId) {
   const block = document.getElementById(blockId);
   if (!block) return;
   block.style.display = (value === 'Yes') ? 'block' : 'none';
-}
-
-// ===== FACULTY → DEPARTMENT MAP =====
-const deptMap = {
-  'Faculty of Agriculture': ['Agricultural Economics','Animal Science','Crop Production','Fisheries & Aquaculture','Forestry & Wildlife','Soil Science'],
-  'Faculty of Arts and Humanities': ['Arabic','Christian Religious Studies','English & Literary Studies','French','History & International Studies','Islamic Studies','Linguistics','Philosophy'],
-  'Faculty of Basic Medical Sciences': ['Anatomy','Biochemistry','Medical Laboratory Science','Nursing Science','Physiology'],
-  'Faculty of Education': ['Adult Education','Curriculum Studies','Early Childhood Education','Educational Management','Guidance & Counselling','Science Education','Social Studies Education'],
-  'Faculty of Engineering and Technology': ['Chemical Engineering','Civil Engineering','Computer Engineering','Electrical/Electronics Engineering','Mechanical Engineering','Mechatronics Engineering'],
-  'Faculty of Environmental Sciences': ['Architecture','Building Technology','Estate Management','Quantity Surveying','Urban & Regional Planning'],
-  'Faculty of Law': ['Business Law','International Law','Private Law','Public Law'],
-  'Faculty of Management Sciences': ['Accounting','Banking & Finance','Business Administration','Entrepreneurship','Insurance','Marketing','Public Administration'],
-  'Faculty of Natural and Applied Sciences': ['Biochemistry','Biology','Chemistry','Computer Science','Information Technology','Mathematics','Microbiology','Physics','Statistics'],
-  'Faculty of Social Sciences': ['Economics','Geography','Mass Communication','Political Science','Psychology','Sociology'],
-  'Postgraduate School': ['Masters Programme','PhD Programme'],
-  'Other': ['Other / Not Listed'],
-};
-
-function handleFacultyChange(faculty) {
-  const deptSel = document.getElementById('department');
-  deptSel.innerHTML = '<option value="">— Select Department —</option>';
-  const depts = deptMap[faculty] || [];
-  depts.forEach(d => {
-    const opt = document.createElement('option');
-    opt.value = d; opt.textContent = d;
-    deptSel.appendChild(opt);
-  });
-  if (!depts.length) {
-    deptSel.innerHTML = '<option value="">— Select Faculty first —</option>';
-  }
 }
 
 // ===== VALIDATION =====
@@ -1851,11 +1912,11 @@ function updateUI() {
   if (currentSection === totalSections) {
     nextBtn.textContent = 'Submit ✦';
     nextBtn.className = 'btn btn-submit';
-    nextBtn.onclick = submitForm;
+    nextBtn.dataset.action = 'submit';
   } else {
     nextBtn.textContent = 'Next →';
     nextBtn.className = 'btn btn-next';
-    nextBtn.onclick = () => changeSection(1);
+    nextBtn.dataset.action = 'next';
   }
 
   const pct = Math.round(((currentSection - 1) / (totalSections - 1)) * 100);
@@ -1925,11 +1986,11 @@ function buildReview() {
     {
       title: "📖 Qur'anic Background",
       items: [
-        ['Can Read Qur\'an', val('canRead')],
+        ["Can Read Qur'an", val('canRead')],
         ['Fluency Level', val('fluency')],
         ['Memorization', val('memorized')],
         ['Stopped At', val('stopPoint')],
-        ['Murāja\'ah', val('muraja')],
+        ["Murāja'ah", val('muraja')],
         ['Tajweed', val('tajweed')],
         ['Preferred Track', formData['track'] || '—'],
         ['Available Days', formData['days'] || '—'],
@@ -1954,12 +2015,15 @@ function buildReview() {
 
 // ===== SUBMIT =====
 function submitForm() {
-  // Collect all values
+  // Proceed directly - paymentRef is optional blocking removed
+
   const d = {
     name: val('fullName'), gender: val('gender'), dob: val('dob'),
     phone: val('phone'), email: val('email'), state: val('stateOrigin'),
     homeAddr: val('homeAddress'), kwasu: val('kwasu'), faculty: val('faculty'),
-    dept: val('department'), grade: val('grade') === 'Others' ? ('Others — ' + (val('gradeOther') || 'not specified')) : val('grade'), hostel: val('hostel'),
+    dept: val('department'),
+    grade: val('grade') === 'Others' ? ('Others — ' + (val('gradeOther') || 'not specified')) : val('grade'),
+    hostel: val('hostel'),
     kinName: val('kinName'), kinRel: val('kinRelation'), kinAddr: val('kinAddress'),
     kinPhone: val('kinPhone'), blood: val('bloodGroup'), geno: val('genotype'),
     disability: val('disability'), disabilityDetail: val('disabilityDetail'),
@@ -2042,6 +2106,8 @@ function submitForm() {
 '│  💳  PAYMENT INFORMATION        │',
 '└─────────────────────────────────┘',
 `  Fee Paid     : ₦1,000`,
+`  Paid To      : ABDULBASIT BOLAKALE IBRAHIM`,
+`  Account No.  : 9155985350 (Opay)`,
 `  Reference    : *${d.paymentRef}*`,
 '',
 '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
@@ -2050,8 +2116,8 @@ function submitForm() {
 '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
   ].join('\n');
 
-  // WhatsApp number
-  const waNumber = '2349095707751';
+  // *** UPDATED WHATSAPP NUMBER: 09073528916 → international: 2349073528916 ***
+  const waNumber = '2349073528916';
   document.getElementById('whatsappBtn').onclick = () => {
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
   };
@@ -2070,11 +2136,9 @@ function downloadSummary(d) {
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
 
-  // Background
   ctx.fillStyle = '#fdf8f0';
   ctx.fillRect(0, 0, 800, 1200);
 
-  // Header
   ctx.fillStyle = '#1a3d2b';
   ctx.fillRect(0, 0, 800, 110);
 
@@ -2091,7 +2155,6 @@ function downloadSummary(d) {
   ctx.font = '13px Georgia';
   ctx.fillText('Programme Registration Summary', 400, 88);
 
-  // Content
   ctx.textAlign = 'left';
   const sections = [
     { label: '● PERSONAL INFORMATION', items: [
@@ -2110,11 +2173,16 @@ function downloadSummary(d) {
     ]},
     { label: "● QUR'ANIC BACKGROUND", items: [
       ["Can Read Qur'an", d.canRead], ['Fluency', d.fluency],
-      ['Memorized', d.memorized], ['Murāja\'ah', d.muraja],
+      ['Memorized', d.memorized], ["Murāja'ah", d.muraja],
       ['Tajweed', d.tajweed], ['Track', d.track], ['Days', d.days]
     ]},
     { label: '● MOTIVATION', items: [['', d.motivation.substring(0,120) + (d.motivation.length > 120 ? '...' : '')]] },
-    { label: '● PAYMENT', items: [['Fee', '₦1,000'], ['Reference', d.paymentRef || '—']] }
+    { label: '● PAYMENT', items: [
+      ['Fee', '₦1,000'],
+      ['Account', 'ABDULBASIT BOLAKALE IBRAHIM'],
+      ['Acc No.', '9155985350 (Opay)'],
+      ['Reference', d.paymentRef || '—']
+    ]}
   ];
 
   let y = 138;
@@ -2136,7 +2204,6 @@ function downloadSummary(d) {
     y += 8;
   });
 
-  // Footer
   ctx.fillStyle = '#1a3d2b';
   ctx.fillRect(0, 1160, 800, 40);
   ctx.fillStyle = '#c9a84c';
@@ -2162,7 +2229,6 @@ const attestBox = document.getElementById('attestBox');
 const attestLabel = document.getElementById('attestLabel');
 const checkboxIcon = document.getElementById('checkboxIcon');
 
-// ---- scroll progress ----
 rulesScrollBody.addEventListener('scroll', function () {
   const scrolled = rulesScrollBody.scrollTop;
   const total = rulesScrollBody.scrollHeight - rulesScrollBody.clientHeight;
@@ -2185,7 +2251,6 @@ rulesScrollBody.addEventListener('scroll', function () {
   }
 });
 
-// ---- toggle attestation (click + touch, no double-fire) ----
 function toggleAttest(e) {
   if (e) { e.preventDefault(); e.stopPropagation(); }
 
@@ -2209,7 +2274,6 @@ function toggleAttest(e) {
   }
 }
 
-// Use touchend for mobile, click for desktop — prevent both from double-firing
 let _touchFired = false;
 attestLabel.addEventListener('touchend', function(e) {
   _touchFired = true;
@@ -2222,7 +2286,6 @@ attestLabel.addEventListener('click', function(e) {
   toggleAttest(e);
 });
 
-// Keyboard accessibility (Space/Enter)
 attestLabel.addEventListener('keydown', function(e) {
   if (e.key === ' ' || e.key === 'Enter') {
     e.preventDefault();
@@ -2242,10 +2305,17 @@ function proceedToForm() {
   setTimeout(function() { gate.classList.add('hidden'); }, 400);
 }
 
-function updateProceedBtn() {}
-
 // ===== INIT =====
 updateUI();
+
+// Single reliable click handler for Next/Submit button
+document.getElementById('btnNext').addEventListener('click', function() {
+  if (this.dataset.action === 'submit') {
+    submitForm();
+  } else {
+    changeSection(1);
+  }
+});
 </script>
 </body>
-  </html>
+</html>
